@@ -122,7 +122,7 @@ class BasicStasisApplication
 	            		$digits = substr($this->dtmfSequence, 0, -1);
 
 
-	            		if($digits == $this->getAuthCode()) {
+	            		if($this->isValidCode($digits)) {
 	            			$this->dtmfSequence = "";
 	            			$this->stasisLogger->notice(dump($digits));
 	            			event(new Events\AuthSuccessEvent($this->phpariObject, $event));
@@ -196,6 +196,12 @@ class BasicStasisApplication
             }
 
         });
+    }
+
+    public function isValidCode($code)
+    {
+        $codes = PinCode::all(['code']);
+        return $codes->contains($code);
     }
 
     public function getAuthCode()
