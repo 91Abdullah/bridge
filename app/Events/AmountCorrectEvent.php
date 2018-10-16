@@ -18,18 +18,16 @@ class AmountCorrectEvent
     public $phpariObject;
     public $event;
     public $channel;
-    public $digits;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($phpariObject, $event, $digits)
+    public function __construct($phpariObject, $event)
     {
         $this->phpariObject = $phpariObject;
         $this->event = $event;
-        $this->digits = $digits;
         $this->channel = IncomingChannel::findOrFail($event->channel->id);
         $this->channel->state = "dial_party";
         $this->channel->save();

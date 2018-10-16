@@ -123,9 +123,10 @@
                     {data: 'billsec', name: 'billsec'},
                     {data: 'dialstatus', name: 'dialstatus'},
                     {data: 'bridged_call_id', name: 'bridged_call_id', fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                        // $(nTd).html("<audio controls><source src=" + 'test' + ">Your browser does not support the audio element.</audio>");
-
+                        $(nTd).html(
+                            "<audio controls><source src=" + 'getFile/' + sData + ">Your browser does not support the audio element.</audio>")
                     }}
+                    // {data: 'bridged_call_id', name: 'bridged_call_id'}
                 ]
             });
         }

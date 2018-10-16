@@ -144,7 +144,7 @@ class BasicStasisApplication
 	            	case '#':
 	            		
 	            		$digits = substr($this->dtmfSequence, 0, -1);
-
+                        $this->stasisLogger->info("+++ Amount Entered: $digits +++");
 
 	            		$this->dtmfSequence = "";
             			event(new Events\AmountEnteredEvent($this->phpariObject, $event, $digits));
@@ -161,9 +161,9 @@ class BasicStasisApplication
             	switch ($event->digit) {
             		case '1':
 
-                        $digits = substr($this->dtmfSequence, 0, -1);
+
             			$this->dtmfSequence = "";
-            			event(new Events\AmountCorrectEvent($this->phpariObject, $event, $digits));
+            			event(new Events\AmountCorrectEvent($this->phpariObject, $event));
             			break;
 
         			case '2':

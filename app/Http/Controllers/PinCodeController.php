@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\PinCode;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PinCodeController extends Controller
 {
@@ -14,7 +15,8 @@ class PinCodeController extends Controller
      */
     public function index()
     {
-        //
+        $codes = PinCode::all();
+        return view('pins.index', compact('codes'));
     }
 
     /**
@@ -24,7 +26,7 @@ class PinCodeController extends Controller
      */
     public function create()
     {
-        //
+        return view('pins.create');
     }
 
     /**
@@ -35,7 +37,13 @@ class PinCodeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'code' => 'required|unique:pin_codes,code|numeric|digits_between:4,10'
+        ]);
+
+        $code = PinCode::create($request->all());
+
+        return redirect()->route('pinCodes.index');
     }
 
     /**
@@ -57,7 +65,7 @@ class PinCodeController extends Controller
      */
     public function edit(PinCode $pinCode)
     {
-        //
+        return view('pins.edit', compact('pinCode'));
     }
 
     /**
@@ -69,7 +77,17 @@ class PinCodeController extends Controller
      */
     public function update(Request $request, PinCode $pinCode)
     {
-        //
+        $request->validate([
+            'code' => [
+                'required',
+                'numeric',
+                'digits_between:4,10',
+                Rule::unique('pin_codes')->ignore($pinCode->id)
+            ]
+        ]);
+
+        $pinCode->update($request->all());
+        return redirect()->route('pinCodes.index');
     }
 
     /**
@@ -80,6 +98,7 @@ class PinCodeController extends Controller
      */
     public function destroy(PinCode $pinCode)
     {
-        //
+        $pinCode->delete();
+        return redirect()->route('pinCodes.index');
     }
 }

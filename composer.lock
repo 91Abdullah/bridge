@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f80a2afb1adae8acf418833efb940d8",
+    "content-hash": "08ef15113621a1fa2e5f2cc766519ac3",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -3149,6 +3149,72 @@
             "description": "CssToInlineStyles is a class that enables you to convert HTML-pages/files into HTML-pages/files with inline styles. This is very useful when you're sending emails.",
             "homepage": "https://github.com/tijsverkoyen/CssToInlineStyles",
             "time": "2017-11-27T11:13:29+00:00"
+        },
+        {
+            "name": "unisharp/laravel-settings",
+            "version": "2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/UniSharp/laravel-settings.git",
+                "reference": "e5289be6411d00d9b09f349c469de5ca582e0de9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/UniSharp/laravel-settings/zipball/e5289be6411d00d9b09f349c469de5ca582e0de9",
+                "reference": "e5289be6411d00d9b09f349c469de5ca582e0de9",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/cache": ">=5.0.0",
+                "illuminate/database": ">=5.0.0",
+                "illuminate/support": ">=5.0.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "codedungeon/phpunit-result-printer": "^0.5.3",
+                "mockery/mockery": "^0.9.9",
+                "phpunit/php-code-coverage": "^5.2",
+                "phpunit/phpunit": "^6.1",
+                "squizlabs/php_codesniffer": "^3.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Unisharp\\Setting\\SettingServiceProvider"
+                    ],
+                    "aliases": {
+                        "Setting": "Unisharp\\Setting\\SettingFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "database"
+                ],
+                "psr-4": {
+                    "Unisharp\\Setting\\": "src/Setting/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "UniSharp Ltd.",
+                    "email": "service@unisharp.com"
+                }
+            ],
+            "description": "Persistent settings manager for laravel, translations are supported.",
+            "keywords": [
+                "Settings",
+                "key-value",
+                "laravel",
+                "persistent",
+                "storage"
+            ],
+            "time": "2018-01-29T09:02:03+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

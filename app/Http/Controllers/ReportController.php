@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Record;
 use Carbon\Carbon;
+use function foo\func;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Yajra\DataTables\DataTables;
 use Ixudra\Curl\Facades\Curl;
 
@@ -20,16 +22,27 @@ class ReportController extends Controller
     {
         $dt = new Carbon($request->date);
         $report = Record::whereDate("start", $dt->format("Y-m-d"))->get(['id', 'source', 'destination', 'start', 'answer', 'end', 'duration', 'billsec', 'dialstatus', 'bridged_call_id']);
-        //get('id', 'source', 'destination', 'start', 'answer', 'end', 'duration', 'billsec', 'dialstatus', 'bridged_call_id');
-//        return dd($report);
+
         return DataTables::of($report)->make();
     }
 
     public function test()
     {
-        $value = "9bbf04ce-4009-4e36-b603-5660227e1fd8";
-        $response = Curl::to("http://10.0.0.80:8088/ari/recordings/stored/$value/file")
-            ->withData(["api_key" => "asterisk:asterisk"])
+        $file = (object)parse_ini_file(storage_path("app\phpari.ini"), true);
+        return dd($file->asterisk_ari);
+        $value = "0d37503c-ed26-495a-bce0-8475810c188a";
+        $obj = new \phpari("disa-test", storage_path("app\\phpari.ini"));
+        $recording = $obj->recordings()->file($value);
+        return $recording;
+
+    }
+
+    public function getFile($fileId)
+    {
+        $file = (object)parse_ini_file(storage_path("app\\phpari.ini"), true);
+        $ari = $file->asterisk_ari;
+        $response = Curl::to($ari['protocol'] . "://" . $ari['host'] . ":" . $ari['port'] . $ari['endpoint'] . "/recordings/stored/$fileId/file")
+            ->withData(["api_key" => $ari['username'] . ":" . $ari['password']])
             ->get();
 
         return $response;

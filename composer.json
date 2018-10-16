@@ -13,6 +13,7 @@
         "ixudra/curl": "^6.16",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
+        "unisharp/laravel-settings": "^2.0",
         "wyrihaximus/react-guzzle": "1.0.0",
         "yajra/laravel-datatables-oracle": "~8.9.1"
     },

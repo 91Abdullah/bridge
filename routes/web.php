@@ -22,6 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::middleware('auth')->group(function () {
     Route::get('/report', 'ReportController@index')->name('reports');
     Route::get('/getData', 'ReportController@getData')->name('get.data');
+    Route::get('/getFile/{fileId}', 'ReportController@getFile')->name('get.file');
     Route::get('/test', 'ReportController@test');
     Route::resource('/pinCodes', 'PinCodeController');
 });

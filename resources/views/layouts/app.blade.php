@@ -12,6 +12,8 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href="{{ asset('storage/img/fav.png') }}" type="image/x-icon" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -36,7 +38,7 @@
                             <a class="nav-link" href="{{ route('reports') }}">Report</a>
                         </li>
                         <li>
-                            <a class="nav-link" href="{{ route('pinCodes.index') }}">Pin Codes</a>
+                            <a class="nav-link" href="{{ route('pinCodes.index') }}">PIN Codes</a>
                         </li>
                     </ul>
 
@@ -47,11 +49,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
-                            <li class="nav-item">
-                                @if (Route::has('register'))
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                @endif
-                            </li>
+                            {{--<li class="nav-item">--}}
+                                {{--@if (Route::has('register'))--}}
+                                    {{--<a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>--}}
+                                {{--@endif--}}
+                            {{--</li>--}}
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
