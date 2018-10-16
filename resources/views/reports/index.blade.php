@@ -51,7 +51,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="10" class="text-center">Select date to display data.</td>
+                            <td colspan="11" class="text-center">Select date to display data.</td>
                         </tr>
                     </tbody>
                 </table>
