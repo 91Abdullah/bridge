@@ -45,6 +45,7 @@
                         <th>Duration</th>
                         <th>Billsec</th>
                         <th>Status</th>
+                        <th>Amount</th>
                         <th>Recording</th>
                     </tr>
                     </thead>
@@ -122,6 +123,7 @@
                     {data: 'duration', name: 'duration'},
                     {data: 'billsec', name: 'billsec'},
                     {data: 'dialstatus', name: 'dialstatus'},
+                    {data: 'amount', name: 'amount'},
                     {data: 'bridged_call_id', name: 'bridged_call_id', fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                         $(nTd).html(
                             "<audio controls><source src=" + 'getFile/' + sData + ">Your browser does not support the audio element.</audio>")

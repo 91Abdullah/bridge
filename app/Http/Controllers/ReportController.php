@@ -21,7 +21,7 @@ class ReportController extends Controller
     public function getData(Request $request)
     {
         $dt = new Carbon($request->date);
-        $report = Record::whereDate("start", $dt->format("Y-m-d"))->get(['id', 'source', 'destination', 'start', 'answer', 'end', 'duration', 'billsec', 'dialstatus', 'bridged_call_id']);
+        $report = Record::whereDate("start", $dt->format("Y-m-d"))->get(['id', 'source', 'destination', 'start', 'answer', 'end', 'duration', 'billsec', 'dialstatus', 'amount', 'bridged_call_id']);
 
         return DataTables::of($report)->make();
     }
