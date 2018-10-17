@@ -117,9 +117,16 @@
             });
 
             modal.on("show.bs.modal", loadModal);
+            modal.on("hide.bs.modal", hideModal);
 
             submitDate.onsubmit = submitForm;
         });
+
+        function hideModal(event) {
+            if(!audioElem.parentNode.paused) {
+                audioElem.parentNode.pause();
+            }
+        }
 
         function downloadFile(event) {
             console.log(event);
