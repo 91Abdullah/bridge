@@ -33,14 +33,16 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-                        <li>
-                            <a class="nav-link" href="{{ route('reports') }}">Report</a>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="{{ route('pinCodes.index') }}">PIN Codes</a>
-                        </li>
-                    </ul>
+                    @auth
+                        <ul class="navbar-nav mr-auto">
+                            <li>
+                                <a class="nav-link" href="{{ route('reports') }}">Report</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" href="{{ route('pinCodes.index') }}">PIN Codes</a>
+                            </li>
+                        </ul>
+                    @endauth
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">

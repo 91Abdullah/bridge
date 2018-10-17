@@ -22,7 +22,8 @@ Auth::routes();
 Route::middleware('auth')->group(function () {
     Route::get('/report', 'ReportController@index')->name('reports');
     Route::get('/getData', 'ReportController@getData')->name('get.data');
-    Route::get('/getFile/{fileId}', 'ReportController@getFile')->name('get.file');
+    Route::post('/getFile', 'ReportController@getFile')->name('get.file');
+    Route::post('/downloadFile', 'ReportController@downloadFile')->name('download.file');
     Route::get('/test', 'ReportController@test');
     Route::resource('/pinCodes', 'PinCodeController');
 });

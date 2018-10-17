@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use function foo\func;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Yajra\DataTables\DataTables;
 use Ixudra\Curl\Facades\Curl;
@@ -37,14 +38,40 @@ class ReportController extends Controller
 
     }
 
-    public function getFile($fileId)
+//    public function getFile($fileId)
+//    {
+//        $file = (object)parse_ini_file(storage_path("app\\phpari.ini"), true);
+//        $ari = $file->asterisk_ari;
+//        $response = Curl::to($ari['protocol'] . "://" . $ari['host'] . ":" . $ari['port'] . $ari['endpoint'] . "/recordings/stored/$fileId/file")
+//            ->withData(["api_key" => $ari['username'] . ":" . $ari['password']])
+//            ->get();
+//
+//        return $response;
+//    }
+
+    public function getFile(Request $request)
     {
+        $fileId = $request->file;
         $file = (object)parse_ini_file(storage_path("app\\phpari.ini"), true);
         $ari = $file->asterisk_ari;
         $response = Curl::to($ari['protocol'] . "://" . $ari['host'] . ":" . $ari['port'] . $ari['endpoint'] . "/recordings/stored/$fileId/file")
             ->withData(["api_key" => $ari['username'] . ":" . $ari['password']])
             ->get();
+        $filePath = "public/" . $fileId . ".wav";
+        $content = Storage::put($filePath, $response);
+        return Storage::url($filePath);
+    }
 
-        return $response;
+    public function downloadFile(Request $request)
+    {
+        $fileId = $request->file;
+        $file = (object)parse_ini_file(storage_path("app\\phpari.ini"), true);
+        $ari = $file->asterisk_ari;
+        $response = Curl::to($ari['protocol'] . "://" . $ari['host'] . ":" . $ari['port'] . $ari['endpoint'] . "/recordings/stored/$fileId/file")
+            ->withData(["api_key" => $ari['username'] . ":" . $ari['password']])
+            ->get();
+        $filePath = "recordings/" . $fileId . ".wav";
+        $content = Storage::put($filePath, $response);
+        return Storage::download($filePath);
     }
 }

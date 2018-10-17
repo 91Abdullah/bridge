@@ -51,10 +51,34 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="11" class="text-center">Select date to display data.</td>
+                            <td colspan="12" class="text-center">Select date to display data.</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="playAudio" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Playing Audio</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <audio controls>
+                        <source id="currentAudio">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -66,11 +90,18 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
 
         const dataUrl = "{{ route('get.data') }}";
+        const token = "{{ csrf_token() }}";
+        const downloadUrl = "{{ route('download.file') }}";
+        const appUrl = "{{ url("/") }}";
+        const playFile = "{{ route('get.file') }}";
         let submitDate = document.getElementById('submitDate');
+        let audioElem = document.getElementById("currentAudio");
         let dp = $('#datepicker');
+        let modal = $('#playAudio');
         let table = undefined;
 
         $(document).ready(function () {
@@ -85,8 +116,52 @@
                 dp.val(e.target.value);
             });
 
+            modal.on("show.bs.modal", loadModal);
+
             submitDate.onsubmit = submitForm;
         });
+
+        function downloadFile(event) {
+            console.log(event);
+            const data = event.target.dataset.src;
+
+            axios.post(downloadUrl, {
+                file: data,
+                _token: token
+            })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        function registerButtons() {
+            let files = document.getElementsByClassName('downloadFile');
+            for (let i = 0; i < files.length; i++) {
+                files[i].addEventListener("click", downloadFile);
+            }
+        }
+        
+        function loadModal(event) {
+            //console.log(event);
+            const data = event.relatedTarget.dataset.src;
+
+            const url = axios.post(playFile, {
+                file: data,
+                _token: token
+            })
+                .then(function (response) {
+                    console.log(response.data);
+                    audioElem.src = appUrl + response.data;
+                    audioElem.parentNode.load();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+        }
 
 
         function submitForm(event) {
@@ -125,11 +200,11 @@
                     {data: 'dialstatus', name: 'dialstatus'},
                     {data: 'amount', name: 'amount'},
                     {data: 'bridged_call_id', name: 'bridged_call_id', fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
-                        $(nTd).html(
-                            "<audio controls><source src=" + 'getFile/' + sData + ">Your browser does not support the audio element.</audio>")
+                        $(nTd).html("<div class='btn-group'><button data-src='" + sData + "' data-toggle='modal' data-target='#playAudio' class='btn btn-primary'><i class='fas fa-play'></i> Play</button><button data-src='" + sData + "' class='btn btn-success downloadFile'><i class='fas fa-download'></i> Download</button></div>")
                     }}
                     // {data: 'bridged_call_id', name: 'bridged_call_id'}
-                ]
+                ],
+                footerCallback: registerButtons
             });
         }
 
