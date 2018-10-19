@@ -24,6 +24,7 @@
                             @forelse($codes as $code)
                                 <tr>
                                     <td>{{ $code->id }}</td>
+                                    <td>{{ $code->branch_name }}</td>
                                     <td>{{ $code->code }}</td>
                                     <td>
                                         <a class="btn btn-dark" href="{{ route('pinCodes.edit', ['id' => $code->id]) }}">Edit</a>

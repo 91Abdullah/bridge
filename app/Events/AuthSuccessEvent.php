@@ -17,16 +17,18 @@ class AuthSuccessEvent
 
     public $phpariObject;
     public $event;
+    public $digits;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($phpariObject, $event)
+    public function __construct($phpariObject, $event, $digits)
     {
         $this->phpariObject = $phpariObject;
         $this->event = $event;
+        $this->digits = $digits;
         $channel = IncomingChannel::findOrFail($event->channel->id);
         $channel->state = "auth_success";
         $channel->save();

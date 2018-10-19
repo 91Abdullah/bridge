@@ -38,7 +38,8 @@ class PinCodeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'code' => 'required|unique:pin_codes,code|numeric|digits_between:4,10'
+            'code' => 'required|unique:pin_codes,code|numeric|digits_between:4,10',
+            'branch_name' => 'required|string'
         ]);
 
         $code = PinCode::create($request->all());
@@ -83,7 +84,8 @@ class PinCodeController extends Controller
                 'numeric',
                 'digits_between:4,10',
                 Rule::unique('pin_codes')->ignore($pinCode->id)
-            ]
+            ],
+            'branch_name' => 'required|string'
         ]);
 
         $pinCode->update($request->all());

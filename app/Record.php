@@ -9,7 +9,7 @@ use Ixudra\Curl\Facades\Curl;
 
 class Record extends Model
 {
-    protected $fillable = ['source', 'destination', 'start', 'answer', 'end', 'duration', 'billsec', 'dialstatus', 'amount','bridged_call_id', 'incoming_channel_id', 'outgoing_channel_id'];
+    protected $fillable = ['source', 'destination', 'start', 'answer', 'end', 'duration', 'billsec', 'dialstatus', 'amount','pin_code', 'bridged_call_id', 'incoming_channel_id', 'outgoing_channel_id'];
 
 //    public function getBridgedCallIdAttribute($value)
 //    {
@@ -18,6 +18,11 @@ class Record extends Model
 //            ->get();
 //        return $response;
 //    }
+
+    public function getPinCodeAttribute($value)
+    {
+        return str_limit($value, 4, '');
+    }
 
     public function getStartAttribute($value)
     {

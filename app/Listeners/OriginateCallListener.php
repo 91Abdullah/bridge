@@ -52,16 +52,17 @@ class OriginateCallListener
         // ]);
 
         $out_channel = $event->phpariObject->channels()->create("SIP/" . $event->number . "@TCL", "disa-test", $bridge['id']);
-        $response = $event->phpariObject->channels()->setVariable($out_channel['id'], "CONNECTEDLINE(num)", "2138650001");
+        $response = $event->phpariObject->channels()->setVariable($out_channel['id'], "CONNECTEDLINE(num)", "2138797457");
 
         $event->phpariObject->stasisLogger->notice(dump($response));
 
         // $dial_channel = $event->phpariObject->channels()->dial($out_channel['id'], $event->event->channel->id, 30);
-        $dial_channel = $event->phpariObject->channels()->dial($out_channel['id'], "2138650001", 30);
+        $dial_channel = $event->phpariObject->channels()->dial($out_channel['id'], "2138797457", 30);
 
         $amount = $event->phpariObject->channels()->getVariable($event->event->channel->id, "AMOUNT");
+        $pin = $event->phpariObject->channels()->getVariable($event->event->channel->id, "PIN");
 
-        $event->phpariObject->stasisLogger->notice(dump($amount));
+        $event->phpariObject->stasisLogger->notice(dump($pin));
 
         $channel = OutgoingChannel::create([
             "id" => $out_channel['id'],
@@ -82,7 +83,8 @@ class OriginateCallListener
             'bridged_call_id' => $bridge['id'],
             'incoming_channel_id' => $event->event->channel->id,
             'outgoing_channel_id' => $out_channel['id'],
-            "amount" => $amount['value']
+            "amount" => $amount['value'],
+            "pin_code" => $pin['value'],
         ]);
     }
 }

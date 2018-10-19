@@ -126,7 +126,7 @@ class BasicStasisApplication
 	            		if($this->isValidCode($digits)) {
 	            			$this->dtmfSequence = "";
 	            			$this->stasisLogger->notice(dump($digits));
-	            			event(new Events\AuthSuccessEvent($this->phpariObject, $event));
+	            			event(new Events\AuthSuccessEvent($this->phpariObject, $event, $digits));
 	            		} else {
 	            			$this->dtmfSequence = "";
 	            			event(new Events\AuthNoSuccessEvent($this->phpariObject, $event));

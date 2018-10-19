@@ -46,6 +46,7 @@
                         <th>Billsec</th>
                         <th>Status</th>
                         <th>Amount</th>
+                        <th>Branch Code</th>
                         <th>Recording</th>
                     </tr>
                     </thead>
@@ -103,6 +104,12 @@
         let dp = $('#datepicker');
         let modal = $('#playAudio');
         let table = undefined;
+
+        document.addEventListener("click", function (event) {
+            if(event.target && event.target.classList.contains("downloadFile")) {
+                downloadFile(event);
+            }
+        });
 
         $(document).ready(function () {
 
@@ -206,12 +213,19 @@
                     {data: 'billsec', name: 'billsec'},
                     {data: 'dialstatus', name: 'dialstatus'},
                     {data: 'amount', name: 'amount'},
+                    {data: 'pin_code', name: 'pin_code'},
                     {data: 'bridged_call_id', name: 'bridged_call_id', fnCreatedCell: function (nTd, sData, oData, iRow, iCol) {
                         $(nTd).html("<div class='btn-group'><button data-src='" + sData + "' data-toggle='modal' data-target='#playAudio' class='btn btn-primary'><i class='fas fa-play'></i> Play</button><button data-src='" + sData + "' class='btn btn-success downloadFile'><i class='fas fa-download'></i> Download</button></div>")
                     }}
                     // {data: 'bridged_call_id', name: 'bridged_call_id'}
                 ],
-                footerCallback: registerButtons
+                footerCallback: function(tfoot, data, start, end, display) {
+                    let files = document.getElementsByClassName('downloadFile');
+                    console.log(files);
+                    for (let i = 0; i < files.length; i++) {
+                        files[i].addEventListener("click", downloadFile);
+                    }
+                }
             });
         }
 
