@@ -17,6 +17,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <th>Id</th>
+                            <th>Branch Name</th>
                             <th>Code</th>
                             <th colspan="2">Actions</th>
                         </thead>
