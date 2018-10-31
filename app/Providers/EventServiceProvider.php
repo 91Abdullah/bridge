@@ -44,6 +44,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\ChannelHangupEvent' => [
             'App\Listeners\ChannelHangupListener'
+        ],
+        'App\Events\AmountIncorrectEvent' => [
+            'App\Listeners\AmountIncorrectListener'
         ]
     ];
 

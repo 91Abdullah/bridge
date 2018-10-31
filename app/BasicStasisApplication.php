@@ -169,8 +169,13 @@ class BasicStasisApplication
 
         			case '2':
 
-        				$this->dtmfSequence = "";
-        				event(new Events\AuthSuccessEvent($this->phpariObject, $event));
+        				try {
+                            $this->dtmfSequence = "";
+                            event(new Events\AmountIncorrectEvent($this->phpariObject, $event));
+                        } catch (Exception $e) {
+        				    $this->stasisLogger->info($e->getMessage());
+        				    $this->stasisLogger->info($e->getFile());
+                        }
         				break;
 
             		default:
