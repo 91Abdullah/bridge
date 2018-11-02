@@ -1,0 +1,13 @@
+813d070,Abdullah Basit,3 days ago,Fixed Pin Codes header
+cf22628,Abdullah Basit,3 days ago,Added original number
+ef75b70,Abdullah Basit,3 days ago,Fixed download recording link. Added branch code in reports. Added Branch Name in PIN Codes page. App lock# 1 further development would be done after financial increment.
+2ffaa07,Abdullah Basit,3 days ago,Fixed download recording link. Added branch code in reports. Added Branch Name in PIN Codes page. App lock# 1 further development would be done after financial increment.
+49ef8ea,Abdullah Basit,5 days ago,Change recording play and download option #2
+28a121d,Abdullah Basit,5 days ago,Change recording play and download option
+5cfab6b,Abdullah Basit,6 days ago,fixed colspan
+d5f9e53,Abdullah Basit,6 days ago,Added amount col in report view
+d2c40c9,Abdullah Basit,6 days ago,Fixed PIN code auth issue
+09c4f79,Abdullah Basit,6 days ago,Register routes removed
+fc2237a,Abdullah Basit,6 days ago,Changed PIN auth
+03e7569,Abdullah Basit,6 days ago,Final commit before production
+8e5b97c,Abdullah Basit,7 days ago,Initial commit before deployment
