@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ReportExport;
 use App\Record;
 use Carbon\Carbon;
 use function foo\func;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Yajra\DataTables\DataTables;
 use Ixudra\Curl\Facades\Curl;
@@ -73,5 +75,14 @@ class ReportController extends Controller
         $filePath = "recordings/" . $fileId . ".wav";
         $content = Storage::put($filePath, $response);
         return Storage::download($filePath);
+    }
+
+    public function export(Request $request)
+    {
+        $from = $request->start_date;
+        $to = $request->end_date;
+
+//        return dd($request);
+        return Excel::download(new ReportExport($from, $to), 'report.xlxs');
     }
 }

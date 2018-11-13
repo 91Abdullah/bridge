@@ -11,7 +11,10 @@
 
         <div class="card">
             <div class="card-header">
-                <h3>Call Detail Report</h3>
+                <h3>
+                    <span>Call Detail Report</span>
+                    <button id="modalDate" data-toggle="modal" data-target="#exportModal" class="btn btn-primary float-right">Date Export</button>
+                </h3>
             </div>
             <div class="card-body">
 
@@ -84,6 +87,40 @@
         </div>
     </div>
 
+    <div id="exportModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export via Date</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="{{ route('export.date') }}">
+                    {!! csrf_field() !!}
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label for="start_date" class="col-sm-3 col-form-label">Start Date</label>
+                            <div class="col-sm-9">
+                                <input id="dpStart" name="start_date" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="end_date" class="col-sm-3 col-form-label">End Date</label>
+                            <div class="col-sm-9">
+                                <input id="dpEnd" name="end_date" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -105,6 +142,9 @@
         let modal = $('#playAudio');
         let table = undefined;
 
+        let dpStart = $('#dpStart');
+        let dpEnd = $('#dpEnd');
+
         document.addEventListener("click", function (event) {
             if(event.target && event.target.classList.contains("downloadFile")) {
                 downloadFile(event);
@@ -121,6 +161,26 @@
 
             dp.on("changeDate", function(e) {
                 dp.val(e.target.value);
+            });
+
+            dpStart.datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                orientation: "bottom"
+            });
+
+            dpStart.on("changeDate", function(e) {
+                dpStart.val(e.target.value);
+            });
+
+            dpEnd.datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                orientation: "bottom"
+            });
+
+            dpEnd.on("changeDate", function(e) {
+                dpEnd.val(e.target.value);
             });
 
             modal.on("show.bs.modal", loadModal);

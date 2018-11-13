@@ -31,7 +31,7 @@ class ChannelHangupListener
         $record = Record::where('bridged_call_id', $event->event->bridge->id)->first();
         $record->end = $event->event->timestamp;
         $record->duration = Carbon::parse($event->event->timestamp)->diffInSeconds($record->start);
-        $record->billsec = Carbon::parse($event->event->timestamp)->diffInSeconds($record->answer);
+        $record->billsec = $record->answer == '' ? 0 : Carbon::parse($event->event->timestamp)->diffInSeconds($record->answer);
         $record->save();
     }
 }
