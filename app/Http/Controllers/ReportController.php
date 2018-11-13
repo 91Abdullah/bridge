@@ -83,6 +83,6 @@ class ReportController extends Controller
         $to = $request->end_date;
 
 //        return dd($request);
-        return Excel::download(new ReportExport($from, $to), 'report.xlxs');
+        return Excel::download(new ReportExport($from, $to), 'report.xlsx');
     }
 }
