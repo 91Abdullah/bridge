@@ -85,6 +85,7 @@ class OriginateCallListener
             'outgoing_channel_id' => $out_channel['id'],
             "amount" => $amount['value'],
             "pin_code" => $pin['value'],
+            'dialstatus' => "NOANSWER"
         ]);
     }
 }

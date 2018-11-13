@@ -31,7 +31,7 @@ class Record extends Model
 
     public function getAnswerAttribute($value)
     {
-        return Carbon::parse($value)->format("d-m-Y H:i:s");
+        return $value == '' ? '' : Carbon::parse($value)->format("d-m-Y H:i:s");
     }
 
     public function getEndAttribute($value)

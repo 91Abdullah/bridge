@@ -31,7 +31,7 @@ class UpdateRecordListener
 
         if($record) {
             $record->start = $event->event->peer->creationtime;
-            $record->dialstatus = $event->event->dialstatus;
+            $record->dialstatus = $event->event->dialstatus == '' ? "NOANSWER" : $event->event->dialstatus;
             if($record->dialstatus == "ANSWER") 
                 $record->answer = $event->event->timestamp;
             $record->save();
