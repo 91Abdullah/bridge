@@ -207,7 +207,7 @@ class BasicStasisApplication
     public function isValidCode($code)
     {
         $codes = PinCode::all(['code']);
-        return $codes->contains('code', $code);
+        return $codes->containsStrict('code', $code);
     }
 
     public function getAuthCode()
