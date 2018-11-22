@@ -47,6 +47,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\AmountIncorrectEvent' => [
             'App\Listeners\AmountIncorrectListener'
+        ],
+        'App\Events\UnauthorizeNumberEvent' => [
+            'App\Listeners\UnauthorizeNumberListener'
         ]
     ];
 

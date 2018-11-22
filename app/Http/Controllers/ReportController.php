@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Exports\ReportExport;
 use App\Record;
 use Carbon\Carbon;
-use function foo\func;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -82,7 +81,6 @@ class ReportController extends Controller
         $from = $request->start_date;
         $to = $request->end_date;
 
-//        return dd($request);
         return Excel::download(new ReportExport($from, $to), 'report.xlsx');
     }
 }

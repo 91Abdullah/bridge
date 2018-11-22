@@ -21,7 +21,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+        <nav class=" navbar navbar-expand-md navbar-light navbar-laravel bg-light">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img width="150" src="{{ asset('storage/img/logo.png') }}" alt="JS Bank Logo">
@@ -36,10 +36,13 @@
                     @auth
                         <ul class="navbar-nav mr-auto">
                             <li>
-                                <a class="nav-link" href="{{ route('reports') }}">Report</a>
+                                <a class="nav-link {{ \Request::is('report*') ? 'active' : '' }}" href="{{ route('reports') }}">Report</a>
                             </li>
                             <li>
-                                <a class="nav-link" href="{{ route('pinCodes.index') }}">PIN Codes</a>
+                                <a class="nav-link {{ \Request::is('pinCodes*') ? 'active' : '' }}" href="{{ route('pinCodes.index') }}">PIN Codes</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('numbers.index') }}" class="nav-link {{ \Request::is('numbers*') ? 'active' : '' }}">Auth Numbers</a>
                             </li>
                         </ul>
                     @endauth

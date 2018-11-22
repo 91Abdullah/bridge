@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\UnauthorizeNumberEvent;
 use phpari;
 use App\IncomingChannel;
 use App\OutgoingChannel;
@@ -54,7 +55,13 @@ class BasicStasisApplication
             // $this->stasisLogger->notice("+++ App Args +++ " . json_encode($args) . "\n");
 
             if(empty($args)) {
-            	event(new Events\IncomingChannelEvent($this->phpariObject, $event));
+                event(new Events\IncomingChannelEvent($this->phpariObject, $event));
+            	if($this->isAllowed($event->channel->caller->name)) {
+                    event(new Events\IncomingChannelEvent($this->phpariObject, $event));
+                } else {
+            	    $this->stasisLogger->info("Unauthorized Number: " . json_encode($event->channel->caller->name));
+            	    event(new Events\UnauthorizeNumberEvent($this->phpariObject, $event));
+                }
             } elseif(!empty($args)) {
             	$this->stasisLogger->notice("+++ App Args +++ " . json_encode($args[0]) . "\n");
             	// event(new Events\OutgoingChannelEvent($this->phpariObject, $args[0], $event));
@@ -208,6 +215,15 @@ class BasicStasisApplication
     {
         $codes = PinCode::all(['code']);
         return $codes->containsStrict('code', $code);
+    }
+
+    public function isAllowed($number)
+    {
+        $number = str_start($number, '0');
+        $numbers = IncomingNumber::all(['number', 'allowed']);
+        return $numbers->containsStrict(function ($value, $key) use ($number) {
+            return $value['number'] == $number && $value['allowed'];
+        });
     }
 
     public function getAuthCode()

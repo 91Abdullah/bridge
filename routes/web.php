@@ -27,4 +27,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/downloadFile', 'ReportController@downloadFile')->name('download.file');
     Route::get('/test', 'ReportController@test');
     Route::resource('/pinCodes', 'PinCodeController');
+    Route::resource('/numbers', 'IncomingNumberController');
+    Route::post('/bulkUpload', 'IncomingNumberController@bulkUpload')->name('bulk.upload');
 });
