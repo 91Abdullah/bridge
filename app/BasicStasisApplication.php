@@ -55,7 +55,7 @@ class BasicStasisApplication
             // $this->stasisLogger->notice("+++ App Args +++ " . json_encode($args) . "\n");
 
             if(empty($args)) {
-                event(new Events\IncomingChannelEvent($this->phpariObject, $event));
+                //event(new Events\IncomingChannelEvent($this->phpariObject, $event));
             	if($this->isAllowed($event->channel->caller->name)) {
                     event(new Events\IncomingChannelEvent($this->phpariObject, $event));
                 } else {
