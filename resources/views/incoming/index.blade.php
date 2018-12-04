@@ -4,6 +4,29 @@
 
     <div class="container-fluid">
 
+        @if(session()->has('failures'))
+            <div class="alert alert-dismissible alert-danger">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h4 class="alert-heading">Error!</h4>
+                @foreach(session('failures') as $failure)
+                    <ul>
+                        <li>Row Number: {{ $failure->row() }}</li>
+                        <li>Attribute: {{ $failure->attribute() }}</li>
+                        <li>
+                            Errors:
+                            <ul>
+                                @foreach($failure->errors() as $errors)
+                                    <li>
+                                        {{ $errors }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                    </ul>
+                @endforeach
+            </div>
+        @endif
+
         <div class="card">
             <div class="card-header">
                 <h3>
@@ -51,7 +74,7 @@
                         </tbody>
                     </table>
                 </div>
-
+                {!! $numbers->links() !!}
             </div>
         </div>
     </div>

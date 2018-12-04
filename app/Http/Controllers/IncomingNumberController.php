@@ -7,6 +7,7 @@ use App\IncomingNumber;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class IncomingNumberController extends Controller
 {
@@ -17,7 +18,7 @@ class IncomingNumberController extends Controller
      */
     public function index()
     {
-        $numbers = IncomingNumber::all();
+        $numbers = IncomingNumber::paginate(10);
         return view('incoming.index', compact('numbers'));
     }
 
@@ -110,7 +111,13 @@ class IncomingNumberController extends Controller
 
     public function bulkUpload(Request $request)
     {
-        Excel::import(new NumbersImport, $request->file('file'));
-        return redirect()->route('numbers.index');
+        try {
+            Excel::import(new NumbersImport, $request->file('file'));
+            return redirect()->route('numbers.index');
+        } catch (ValidationException $e) {
+            $failures = $e->failures();
+            //dd($failures);
+            return redirect()->route('numbers.index')->with(compact('failures'));
+        }
     }
 }
