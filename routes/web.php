@@ -29,4 +29,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('/pinCodes', 'PinCodeController');
     Route::resource('/numbers', 'IncomingNumberController');
     Route::post('/bulkUpload', 'IncomingNumberController@bulkUpload')->name('bulk.upload');
+    Route::get('/getNumbersData', 'IncomingNumberController@getNumbersData')->name('get.numbers');
 });

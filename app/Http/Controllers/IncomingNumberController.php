@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Validators\ValidationException;
+use Yajra\DataTables\Facades\DataTables;
 
 class IncomingNumberController extends Controller
 {
@@ -18,8 +19,14 @@ class IncomingNumberController extends Controller
      */
     public function index()
     {
-        $numbers = IncomingNumber::paginate(10);
-        return view('incoming.index', compact('numbers'));
+        //$numbers = IncomingNumber::paginate(10);
+        return view('incoming.index');
+    }
+
+    public function getNumbersData(Request $request)
+    {
+        $numbers = IncomingNumber::all();
+        return DataTables::of($numbers)->make();
     }
 
     /**
@@ -100,8 +107,9 @@ class IncomingNumberController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\IncomingNumber  $incomingNumber
+     * @param  \App\IncomingNumber $incomingNumber
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(IncomingNumber $number)
     {
