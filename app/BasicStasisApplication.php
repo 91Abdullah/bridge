@@ -136,7 +136,7 @@ class BasicStasisApplication
 	            			event(new Events\AuthSuccessEvent($this->phpariObject, $event, $digits));
 	            		} else {
 	            			$this->dtmfSequence = "";
-	            			event(new Events\AuthNoSuccessEvent($this->phpariObject, $event));
+	            			event(new Events\AuthNoSuccessEvent($this->phpariObject, $event, $digits));
 	            		}
 
 	            		break;

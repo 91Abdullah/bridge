@@ -17,16 +17,18 @@ class AuthNoSuccessEvent
 
     public $phpariObject;
     public $event;
+    public $digits;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($phpariObject, $event)
+    public function __construct($phpariObject, $event, $digits)
     {
         $this->phpariObject = $phpariObject;
         $this->event = $event;
+        $this->digits = $digits;
     }
 
     /**
