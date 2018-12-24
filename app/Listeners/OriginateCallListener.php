@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\ChannelDtmf;
 use App\Events\OriginateCallEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -59,8 +60,19 @@ class OriginateCallListener
         // $dial_channel = $event->phpariObject->channels()->dial($out_channel['id'], $event->event->channel->id, 30);
         $dial_channel = $event->phpariObject->channels()->dial($out_channel['id'], "2138650001", 30);
 
-        $amount = $event->phpariObject->channels()->getVariable($event->event->channel->id, "AMOUNT");
-        $pin = $event->phpariObject->channels()->getVariable($event->event->channel->id, "PIN");
+        //$amount = $event->phpariObject->channels()->getVariable($event->event->channel->id, "AMOUNT");
+        //$pin = $event->phpariObject->channels()->getVariable($event->event->channel->id, "PIN");
+
+        $amount = 0;
+        $pin = 0;
+
+        try {
+            $amount = substr(ChannelDtmf::find($event->event->channel->id)->amount, 0, -1);
+            $pin = substr(ChannelDtmf::find($event->event->channel->id)->digits, 0, -1);
+        } catch (\Exception $e) {
+            $amount = 0;
+            $pin = 0;
+        }
 
         $event->phpariObject->stasisLogger->notice(dump($pin));
 
@@ -83,8 +95,8 @@ class OriginateCallListener
             'bridged_call_id' => $bridge['id'],
             'incoming_channel_id' => $event->event->channel->id,
             'outgoing_channel_id' => $out_channel['id'],
-            "amount" => $amount['value'],
-            "pin_code" => $pin['value'],
+            "amount" => $amount,
+            "pin_code" => $pin,
             'dialstatus' => "NOANSWER"
         ]);
     }

@@ -8,7 +8,7 @@ use App\IncomingChannel;
 use App\OutgoingChannel;
 use Exception;
 
-class BasicStasisApplication
+class AdvanceStasisApplication
 {
     private $ariEndpoint;
     private $stasisClient;
@@ -56,15 +56,15 @@ class BasicStasisApplication
 
             if(empty($args)) {
                 //event(new Events\IncomingChannelEvent($this->phpariObject, $event));
-            	if($this->isAllowed($event->channel->caller->name)) {
+                if($this->isAllowed($event->channel->caller->name)) {
                     event(new Events\IncomingChannelEvent($this->phpariObject, $event));
                 } else {
-            	    $this->stasisLogger->info("Unauthorized Number: " . json_encode($event->channel->caller->name));
-            	    event(new Events\UnauthorizeNumberEvent($this->phpariObject, $event));
+                    $this->stasisLogger->info("Unauthorized Number: " . json_encode($event->channel->caller->name));
+                    event(new Events\UnauthorizeNumberEvent($this->phpariObject, $event));
                 }
             } elseif(!empty($args)) {
-            	$this->stasisLogger->notice("+++ App Args +++ " . json_encode($args[0]) . "\n");
-            	// event(new Events\OutgoingChannelEvent($this->phpariObject, $args[0], $event));
+                $this->stasisLogger->notice("+++ App Args +++ " . json_encode($args[0]) . "\n");
+                // event(new Events\OutgoingChannelEvent($this->phpariObject, $args[0], $event));
             }
 
         });
@@ -82,34 +82,34 @@ class BasicStasisApplication
         });
 
         $this->stasisEvents->on('ChannelVarset', function ($event) {
-        	$this->stasisLogger->notice("+++ ChannelVarset +++ " . json_encode($event->channel->id) . "\n");
+            $this->stasisLogger->notice("+++ ChannelVarset +++ " . json_encode($event->channel->id) . "\n");
         });
 
         $this->stasisEvents->on('Dial', function ($event) {
-        	$this->stasisLogger->notice("+++ Dial +++ " . json_encode($event->peer->id) . "\n");
-        	event(new Events\UpdateRecordEvent($event));
+            $this->stasisLogger->notice("+++ Dial +++ " . json_encode($event->peer->id) . "\n");
+            event(new Events\UpdateRecordEvent($event));
         });
 
         $this->stasisEvents->on('ChannelConnectedLine', function ($event) {
-        	$this->stasisLogger->notice("+++ ChannelConnectedLine +++ " . json_encode($event->channel->id) . "\n");
+            $this->stasisLogger->notice("+++ ChannelConnectedLine +++ " . json_encode($event->channel->id) . "\n");
         });
 
         $this->stasisEvents->on('ChannelEnteredBridge', function ($event) {
-        	$this->stasisLogger->notice("+++ ChannelEnteredBridge +++ " . json_encode($event->channel->id) . "\n");
+            $this->stasisLogger->notice("+++ ChannelEnteredBridge +++ " . json_encode($event->channel->id) . "\n");
         });
 
         $this->stasisEvents->on('ChannelLeftBridge', function ($event) {
-        	$this->stasisLogger->notice("+++ ChannelLeftBridge +++ " . json_encode($event->bridge->id) . "\n");
+            $this->stasisLogger->notice("+++ ChannelLeftBridge +++ " . json_encode($event->bridge->id) . "\n");
 
-        	event(new Events\ChannelHangupEvent($event));
+            event(new Events\ChannelHangupEvent($event));
 
-        	foreach ($event->bridge->channels as $key => $value) {
-        		$this->stasisLogger->notice("+++ Destroying Channel +++ " . json_encode($value) . "\n");
-        		$this->phpariObject->channels()->delete($value);
-        	}
+            foreach ($event->bridge->channels as $key => $value) {
+                $this->stasisLogger->notice("+++ Destroying Channel +++ " . json_encode($value) . "\n");
+                $this->phpariObject->channels()->delete($value);
+            }
 
-        	$this->stasisLogger->notice("+++ Destroying Bridge +++ " . json_encode($event->bridge->id) . "\n");
-        	$this->phpariObject->bridges()->terminate($event->bridge->id);
+            $this->stasisLogger->notice("+++ Destroying Bridge +++ " . json_encode($event->bridge->id) . "\n");
+            $this->phpariObject->bridges()->terminate($event->bridge->id);
 
         });
 
@@ -118,94 +118,125 @@ class BasicStasisApplication
             $this->setDtmf($event->digit);
 
             $channel = IncomingChannel::find($event->channel->id);
+            $dtmf = null;
+
+            if(!$dtmf = ChannelDtmf::find($event->channel->id)) {
+                $dtmf = new ChannelDtmf;
+                $dtmf->id = $event->channel->id;
+                $dtmf->save();
+            } else {
+                $dtmf = ChannelDtmf::find($event->channel->id);
+            }
 
             $this->stasisLogger->notice(dump($this->dtmfSequence));
 
 
-            if($channel === $event->channel->id && $channel->state == "initial") {
-            	switch ($event->digit) {
-	            	case '#':
-	            		
-	            		$digits = substr($this->dtmfSequence, 0, -1);
+            if($channel->state == "initial" && $dtmf !== null) {
+
+                $dtmf->digits = $dtmf->digits . $event->digit;
+                $dtmf->save();
+
+                switch ($event->digit) {
+                    case '#':
+
+                        //$digits = substr($this->dtmfSequence, 0, -1);
+                        $digits = substr($dtmf->digits, 0, -1);
 
                         $this->stasisLogger->info($this->isValidCode($digits));
                         $this->stasisLogger->info($digits);
-	            		if($this->isValidCode($digits)) {
-	            			$this->dtmfSequence = "";
-	            			$this->stasisLogger->notice(dump($digits));
-	            			event(new Events\AuthSuccessEvent($this->phpariObject, $event, $digits));
-	            		} else {
-	            			$this->dtmfSequence = "";
-	            			event(new Events\AuthNoSuccessEvent($this->phpariObject, $event, $digits));
-	            		}
+                        if($this->isValidCode($digits)) {
+                            $this->dtmfSequence = "";
+                            $this->stasisLogger->notice(dump($digits));
+                            event(new Events\AuthSuccessEvent($this->phpariObject, $event, $digits));
+                        } else {
+                            $this->dtmfSequence = "";
+                            event(new Events\AuthNoSuccessEvent($this->phpariObject, $event, $digits));
+                        }
 
-	            		break;
-	            	case '*':
-	            		$this->dtmfSequence = "";
-	            		break;
-	            	default:
-	            		
-	            		break;
-	            }
-            } elseif($channel && $channel->state == "auth_success") {
-            	switch ($event->digit) {
-	            	case '#':
-	            		
-	            		$digits = substr($this->dtmfSequence, 0, -1);
+                        break;
+                    case '*':
+                        $this->dtmfSequence = "";
+                        $dtmf->digits = "";
+                        $dtmf->save();
+                        break;
+                    default:
+
+                        break;
+                }
+            } elseif($channel->state == "auth_success" && $dtmf !== null) {
+
+                $dtmf->amount = $dtmf->amount . $event->digit;
+                $dtmf->save();
+
+                switch ($event->digit) {
+                    case '#':
+
+                        //$digits = substr($this->dtmfSequence, 0, -1);
+                        $digits = substr($dtmf->amount, 0, -1);
+
                         $this->stasisLogger->info("+++ Amount Entered: $digits +++");
 
-	            		$this->dtmfSequence = "";
-            			event(new Events\AmountEnteredEvent($this->phpariObject, $event, $digits));
+                        $this->dtmfSequence = "";
+                        event(new Events\AmountEnteredEvent($this->phpariObject, $event, $digits));
 
-	            		break;
-	            	case '*':
-	            		$this->dtmfSequence = "";
-	            		break;
-	            	default:
-	            		
-	            		break;
-	            }
-            } elseif($channel && $channel->state == "amount_validate") {
-            	switch ($event->digit) {
-            		case '1':
+                        break;
+                    case '*':
+                        $this->dtmfSequence = "";
+                        $dtmf->amount = "";
+                        $dtmf->save();
+                        break;
+                    default:
+
+                        break;
+                }
+            } elseif($channel->state == "amount_validate" && $dtmf !== null) {
+
+                switch ($event->digit) {
+                    case '1':
 
 
-            			$this->dtmfSequence = "";
-            			event(new Events\AmountCorrectEvent($this->phpariObject, $event));
-            			break;
+                        $this->dtmfSequence = "";
+                        event(new Events\AmountCorrectEvent($this->phpariObject, $event));
+                        break;
 
-        			case '2':
+                    case '2':
 
-        				try {
+                        try {
                             $this->dtmfSequence = "";
                             event(new Events\AmountIncorrectEvent($this->phpariObject, $event));
                         } catch (Exception $e) {
-        				    $this->stasisLogger->info($e->getMessage());
-        				    $this->stasisLogger->info($e->getFile());
+                            $this->stasisLogger->info($e->getMessage());
+                            $this->stasisLogger->info($e->getFile());
                         }
-        				break;
+                        break;
 
-            		default:
-            			break;
-            	}
-            } elseif($channel && $channel->state == "dial_party") {
-            	switch ($event->digit) {
-	            	case '#':
-	            		
-	            		$digits = substr($this->dtmfSequence, 0, -1);
+                    default:
+                        break;
+                }
+            } elseif($channel->state == "dial_party" && $dtmf !== null) {
+
+                $dtmf->dial = $dtmf->dial . $event->digit;
+                $dtmf->save();
+
+                switch ($event->digit) {
+                    case '#':
+
+                        $digits = substr($dtmf->dial, 0, -1);
 
 
-	            		$this->dtmfSequence = "";
-            			event(new Events\OriginateCallEvent($this->phpariObject, $event, $digits));
+                        $this->dtmfSequence = "";
+                        event(new Events\OriginateCallEvent($this->phpariObject, $event, $digits));
 
-	            		break;
-	            	case '*':
-	            		$this->dtmfSequence = "";
-	            		break;
-	            	default:
-	            		
-	            		break;
-	            }
+                        break;
+                    case '*':
+                        $this->dtmfSequence = "";
+                        $dtmf->dial = "";
+                        $dtmf->save();
+                        break;
+                    default:
+
+                        break;
+                }
             }
 
         });
@@ -228,7 +259,7 @@ class BasicStasisApplication
 
     public function getAuthCode()
     {
-    	return "2256";
+        return "2256";
     }
 
     public function StasisAppConnectionHandlers()
