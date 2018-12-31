@@ -131,7 +131,7 @@ class AdvanceStasisApplication
             $this->stasisLogger->notice(dump($this->dtmfSequence));
 
 
-            if($channel->state == "initial" && $dtmf !== null) {
+            if($channel && $channel->state == "initial" && $dtmf !== null) {
 
                 $dtmf->digits = $dtmf->digits . $event->digit;
                 $dtmf->save();
@@ -163,7 +163,7 @@ class AdvanceStasisApplication
 
                         break;
                 }
-            } elseif($channel->state == "auth_success" && $dtmf !== null) {
+            } elseif($channel && $channel->state == "auth_success" && $dtmf !== null) {
 
                 $dtmf->amount = $dtmf->amount . $event->digit;
                 $dtmf->save();
@@ -189,7 +189,7 @@ class AdvanceStasisApplication
 
                         break;
                 }
-            } elseif($channel->state == "amount_validate" && $dtmf !== null) {
+            } elseif($channel && $channel->state == "amount_validate" && $dtmf !== null) {
 
                 switch ($event->digit) {
                     case '1':
@@ -213,7 +213,7 @@ class AdvanceStasisApplication
                     default:
                         break;
                 }
-            } elseif($channel->state == "dial_party" && $dtmf !== null) {
+            } elseif($channel && $channel->state == "dial_party" && $dtmf !== null) {
 
                 $dtmf->dial = $dtmf->dial . $event->digit;
                 $dtmf->save();
