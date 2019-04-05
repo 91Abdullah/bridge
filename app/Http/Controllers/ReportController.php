@@ -33,7 +33,7 @@ class ReportController extends Controller
         $file = (object)parse_ini_file(storage_path("app\phpari.ini"), true);
         return dd($file->asterisk_ari);
         $value = "0d37503c-ed26-495a-bce0-8475810c188a";
-        $obj = new \phpari("disa-test", storage_path("app\\phpari.ini"));
+        $obj = new \phpari("disa-test-2", storage_path("app\\phpari.ini"));
         $recording = $obj->recordings()->file($value);
         return $recording;
 
