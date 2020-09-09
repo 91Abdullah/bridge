@@ -30,7 +30,7 @@ class AuthSuccessEvent
         $this->event = $event;
         $this->digits = $digits;
         $channel = IncomingChannel::findOrFail($event->channel->id);
-        $channel->state = "dial_party";
+        $channel->state = "auth_success";
         $channel->save();
     }
 

@@ -29,8 +29,8 @@ class AuthSuccessListener
         $event->phpariObject->channels()->setVariable($event->event->channel->id, "PIN", $event->digits);
         $event->phpariObject->channels()->playback($event->event->channel->id, "sound:auth-thankyou", null, null, null, null);
         // $event->phpariObject->channels()->playback($event->channel->id, "tone:ring;tonezone=en", null, null, null, null);
-        /*$event->phpariObject->channels()->playback($event->event->channel->id, "sound:please-enter-the", null, null, null, null);
+        $event->phpariObject->channels()->playback($event->event->channel->id, "sound:please-enter-the", null, null, null, null);
         $event->phpariObject->channels()->playback($event->event->channel->id, "sound:digits", null, null, null, null);
-        $event->phpariObject->channels()->playback($event->event->channel->id, "sound:followed_pound", null, null, null, null);*/
+        $event->phpariObject->channels()->playback($event->event->channel->id, "sound:followed_pound", null, null, null, null);
     }
 }

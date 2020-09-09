@@ -17,7 +17,8 @@
         "maatwebsite/excel": "^3.1",
         "unisharp/laravel-settings": "^2.0",
         "wyrihaximus/react-guzzle": "1.0.0",
-        "yajra/laravel-datatables-oracle": "~8.9.1"
+        "yajra/laravel-datatables-oracle": "~8.9.1",
+        "ext-json": "*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
