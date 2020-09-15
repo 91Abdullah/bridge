@@ -2,25 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\AdvanceStasisApplication;
-use App\NewStasisApp;
+use App\TestStasisApp;
 use Illuminate\Console\Command;
 
-class NewStart extends Command
+class TestApp extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'new:start';
+    protected $signature = 'testapp:start';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Start new app based on persistent DTMF entries';
+    protected $description = 'Command to start Test App';
 
     /**
      * Create a new command instance.
@@ -39,15 +38,7 @@ class NewStart extends Command
      */
     public function handle()
     {
-        /*$basicAriClient = new AdvanceStasisApplication("disa-test");
-        $basicAriClient->stasisLogger->info("Starting Stasis Program... Waiting for handshake...");
-        $basicAriClient->StasisAppEventHandler();
-        $basicAriClient->stasisLogger->info("Initializing Handlers... Waiting for handshake...");
-        $basicAriClient->StasisAppConnectionHandlers();
-        $basicAriClient->stasisLogger->info("Connecting... Waiting for handshake...");
-        $basicAriClient->execute();*/
-
-        $client = new NewStasisApp("disa-test");
+        $client = new TestStasisApp("app-test");
         $client->stasisLogger->info("Starting Stasis Program... Waiting for handshake...");
         $client->StasisAppEventHandler();
         $client->stasisLogger->info("Initializing Handlers... Waiting for handshake...");

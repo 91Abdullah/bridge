@@ -3,6 +3,17 @@
 @section('content')
 
     <div class="container-fluid">
+	
+		@if(session()->has('success') || session()->has('error'))
+			
+		<div class="alert alert-{{ session()->has('sccuess') ? 'success' : 'danger' }} alert-dismissible fade show" role="alert">
+			<strong>@if(session()->has('success')) Success! @else Error! @endif</strong> @if(session()->has('success')) {{ session('success') }} @else {{ session('danger') }} @endif
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+			
+		@endif
 
         <div class="card">
             <div class="card-header">
@@ -29,7 +40,11 @@
                                     <td>{{ $code->code }}</td>
                                     <td>
                                         <a class="btn btn-dark" href="{{ route('pinCodes.edit', ['id' => $code->id]) }}">Edit</a>
-                                        <a href="{{ route('pinCodes.destroy', ['id' => $code->id]) }}" class="btn btn-danger">Delete</a>
+                                        <form style="display:inline;" method="post" action="{{ route('pinCodes.destroy', ['id' => $code->id]) }}">
+											@csrf
+											@method('delete')
+											<button type="submit" class="btn btn-danger">Delete</button>
+										</form>
                                     </td>
                                 </tr>
                             @empty

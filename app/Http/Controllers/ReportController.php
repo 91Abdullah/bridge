@@ -53,9 +53,19 @@ class ReportController extends Controller
     public function getFile(Request $request)
     {
         $fileId = $request->file;
+        $bridge = Record::where("bridged_call_id", $fileId)->first();
+        $date = Carbon::parse($bridge->start);
+        $year = $date->year;
+        $month = strlen($date->month) == 2 ? $date->month : "0" . $date->month;
+        $day = strlen($date->day) == 2 ? $date->day : "0" . $date->day;
+        if($date <= Carbon::parse("2020-07-02 18:17:56")) {
+            $path = $fileId;
+        } else {
+            $path = urlencode("$year/$month/$day/$fileId");
+        }
         $file = (object)parse_ini_file(storage_path("app\\phpari.ini"), true);
         $ari = $file->asterisk_ari;
-        $response = Curl::to($ari['protocol'] . "://" . $ari['host'] . ":" . $ari['port'] . $ari['endpoint'] . "/recordings/stored/$fileId/file")
+        $response = Curl::to($ari['protocol'] . "://" . $ari['host'] . ":" . $ari['port'] . $ari['endpoint'] . "/recordings/stored/$path/file")
             ->withData(["api_key" => $ari['username'] . ":" . $ari['password']])
             ->get();
         $filePath = "public/" . $fileId . ".wav";
