@@ -98,6 +98,12 @@ class OriginateCallListener
         $day = strlen($date->day) == 2 ? $date->day : "0" . $date->day;
         $file_name = $year . "/" . $month . "/" . $day . "/" . $bridge['id'];
 
+		$date = Carbon::now();
+        $year = $date->year;
+        $month = strlen($date->month) == 2 ? $date->month : "0" . $date->month;
+        $day = strlen($date->day) == 2 ? $date->day : "0" . $date->day;
+        $file_name = $year . "/" . $month . "/" . $day . "/" . $bridge['id'];
+
         // $event->phpariObject->channels()->indicateRingingStart($event->event->channel->id);
         $event->phpariObject->bridges()->addChannel($bridge['id'], $out_channel['id']);
         $event->phpariObject->bridges()->record($bridge['id'], $file_name, "wav", null, null, null, true, null);

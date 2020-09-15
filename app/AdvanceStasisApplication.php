@@ -128,8 +128,6 @@ class AdvanceStasisApplication
                 $dtmf = ChannelDtmf::find($event->channel->id);
             }
 
-            $this->stasisLogger->notice(dump($this->dtmfSequence));
-
 
             if($channel && $channel->state == "initial" && $dtmf !== null) {
 
@@ -146,7 +144,6 @@ class AdvanceStasisApplication
                         $this->stasisLogger->info($digits);
                         if($this->isValidCode($digits)) {
                             $this->dtmfSequence = "";
-                            $this->stasisLogger->notice(dump($digits));
                             event(new Events\AuthSuccessEvent($this->phpariObject, $event, $digits));
                         } else {
                             $this->dtmfSequence = "";
@@ -171,8 +168,8 @@ class AdvanceStasisApplication
                 switch ($event->digit) {
                     case '#':
 
-                        //$digits = substr($this->dtmfSequence, 0, -1);
-                        $digits = substr($dtmf->amount, 0, -1);
+                        $digits = substr($this->dtmfSequence, 0, -1);
+                        //$digits = substr($dtmf->amount, 0, -1);
 
                         $this->stasisLogger->info("+++ Amount Entered: $digits +++");
 
@@ -250,12 +247,6 @@ class AdvanceStasisApplication
 
     public function isAllowed($number)
     {
-        // $number = str_start($number, '0');
-        // $numbers = IncomingNumber::all(['number', 'allowed']);
-        // return $numbers->containsStrict(function ($value, $key) use ($number) {
-            // return $value['number'] == $number && $value['allowed'];
-        // });
-		
 		// Test new query dated 20-05-2020 as old one was time taking
 		$number = substr($number, 0, 1) == '0' ? substr($number, 1) : $number;
 		$status = IncomingNumber::where('number', 'like', "%" . $number . "%")->where('allowed', true)->first();

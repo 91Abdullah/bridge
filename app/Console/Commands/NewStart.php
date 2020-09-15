@@ -39,13 +39,6 @@ class NewStart extends Command
      */
     public function handle()
     {
-        /*$basicAriClient = new AdvanceStasisApplication("disa-test");
-        $basicAriClient->stasisLogger->info("Starting Stasis Program... Waiting for handshake...");
-        $basicAriClient->StasisAppEventHandler();
-        $basicAriClient->stasisLogger->info("Initializing Handlers... Waiting for handshake...");
-        $basicAriClient->StasisAppConnectionHandlers();
-        $basicAriClient->stasisLogger->info("Connecting... Waiting for handshake...");
-        $basicAriClient->execute();*/
         $client = new NewStasisApp("disa-test");
         $client->stasisLogger->info("Starting Stasis Program... Waiting for handshake...");
         $client->StasisAppEventHandler();
