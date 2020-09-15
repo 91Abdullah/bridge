@@ -35,7 +35,7 @@ class OriginateCallListener
         $event->phpariObject->bridges()->addChannel($bridge['id'], $event->event->channel->id);
         // $event->phpariObject->bridges()->addChannel($bridge['id'], $channel['id']);
         $bridge = $event->phpariObject->bridges()->details($bridge['id']);
-        
+
 
         $bridgeModel = BridgedCall::create([
             "id" => $bridge['id'],
@@ -86,6 +86,12 @@ class OriginateCallListener
             "state" => $out_channel['state']
         ]);
 		
+		$date = Carbon::now();
+        $year = $date->year;
+        $month = strlen($date->month) == 2 ? $date->month : "0" . $date->month;
+        $day = strlen($date->day) == 2 ? $date->day : "0" . $date->day;
+        $file_name = $year . "/" . $month . "/" . $day . "/" . $bridge['id'];
+
 		$date = Carbon::now();
         $year = $date->year;
         $month = strlen($date->month) == 2 ? $date->month : "0" . $date->month;
