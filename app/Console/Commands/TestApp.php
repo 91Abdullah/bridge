@@ -38,7 +38,7 @@ class TestApp extends Command
      */
     public function handle()
     {
-        $client = new TestStasisApp("app-test");
+        $client = new TestStasisApp("disa-test");
         $client->stasisLogger->info("Starting Stasis Program... Waiting for handshake...");
         $client->StasisAppEventHandler();
         $client->stasisLogger->info("Initializing Handlers... Waiting for handshake...");
