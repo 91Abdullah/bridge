@@ -44,7 +44,7 @@ class PinCodeController extends Controller
 
         $code = PinCode::create($request->all());
 
-        return redirect()->route('pinCodes.index');
+        return redirect()->route('pinCodes.index')->with('success', "Pin Code has been created.");
     }
 
     /**
@@ -89,7 +89,7 @@ class PinCodeController extends Controller
         ]);
 
         $pinCode->update($request->all());
-        return redirect()->route('pinCodes.index');
+        return redirect()->route('pinCodes.index')->with('success', "Pin Code has been created.");
     }
 
     /**
@@ -100,7 +100,11 @@ class PinCodeController extends Controller
      */
     public function destroy(PinCode $pinCode)
     {
-        $pinCode->delete();
-        return redirect()->route('pinCodes.index');
+        try {
+			$pinCode->delete();
+		} catch (\Exception $e) {
+			return redirect()->route('pinCodes.index')->with('error', "Error in deleting pincode: " . $e->getMessage());
+		}
+        return redirect()->route('pinCodes.index')->with('success', "Pincode has been deleted.");
     }
 }

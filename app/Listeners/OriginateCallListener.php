@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\OutgoingChannel;
 use App\BridgedCall;
 use App\Record;
+use Carbon\Carbon;
 
 class OriginateCallListener
 {
@@ -55,7 +56,7 @@ class OriginateCallListener
         $out_channel = $event->phpariObject->channels()->create("SIP/" . $event->number . "@TCL", "disa-test", $bridge['id']);
         $response = $event->phpariObject->channels()->setVariable($out_channel['id'], "CONNECTEDLINE(num)", "2138650001");
 
-        $event->phpariObject->stasisLogger->notice(dump($response));
+        //$event->phpariObject->stasisLogger->notice(dump($response));
 
         // $dial_channel = $event->phpariObject->channels()->dial($out_channel['id'], $event->event->channel->id, 30);
         $dial_channel = $event->phpariObject->channels()->dial($out_channel['id'], "2138650001", 30);
@@ -74,7 +75,7 @@ class OriginateCallListener
             $pin = 0;
         }
 
-        $event->phpariObject->stasisLogger->notice(dump($pin));
+        //$event->phpariObject->stasisLogger->notice(dump($pin));
 
         $channel = OutgoingChannel::create([
             "id" => $out_channel['id'],
@@ -84,10 +85,16 @@ class OriginateCallListener
             "creationtime" => $out_channel['creationtime'],
             "state" => $out_channel['state']
         ]);
+		
+		$date = Carbon::now();
+        $year = $date->year;
+        $month = strlen($date->month) == 2 ? $date->month : "0" . $date->month;
+        $day = strlen($date->day) == 2 ? $date->day : "0" . $date->day;
+        $file_name = $year . "/" . $month . "/" . $day . "/" . $bridge['id'];
 
         // $event->phpariObject->channels()->indicateRingingStart($event->event->channel->id);
         $event->phpariObject->bridges()->addChannel($bridge['id'], $out_channel['id']);
-        $event->phpariObject->bridges()->record($bridge['id'], $bridge['id'], "wav", null, null, null, true, null);
+        $event->phpariObject->bridges()->record($bridge['id'], $file_name, "wav", null, null, null, true, null);
         $record = Record::create([
             'source' => $event->event->channel->caller->name,
             'destination' => $event->number,

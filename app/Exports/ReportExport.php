@@ -21,7 +21,7 @@ class ReportExport implements FromQuery, WithHeadings
     */
     public function query()
     {
-        return Record::query()->whereBetween('start', [Carbon::parse($this->from)->format('Y-m-d'), Carbon::parse($this->to)->format('Y-m-d')])->select(['id', 'source', 'destination', 'start', 'answer', 'end', 'duration', 'billsec', 'dialstatus', 'amount', 'pin_code']);
+        return Record::query()->whereBetween('created_at', [Carbon::parse($this->from)->startOfDay(), Carbon::parse($this->to)->endOfDay()])->select(['id', 'source', 'destination', 'start', 'answer', 'end', 'duration', 'billsec', 'dialstatus', 'amount', 'pin_code']);
     }
 
     public function __construct(string $from, string $to)

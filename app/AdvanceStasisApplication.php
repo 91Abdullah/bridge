@@ -250,11 +250,16 @@ class AdvanceStasisApplication
 
     public function isAllowed($number)
     {
-        $number = str_start($number, '0');
-        $numbers = IncomingNumber::all(['number', 'allowed']);
-        return $numbers->containsStrict(function ($value, $key) use ($number) {
-            return $value['number'] == $number && $value['allowed'];
-        });
+        // $number = str_start($number, '0');
+        // $numbers = IncomingNumber::all(['number', 'allowed']);
+        // return $numbers->containsStrict(function ($value, $key) use ($number) {
+            // return $value['number'] == $number && $value['allowed'];
+        // });
+		
+		// Test new query dated 20-05-2020 as old one was time taking
+		$number = substr($number, 0, 1) == '0' ? substr($number, 1) : $number;
+		$status = IncomingNumber::where('number', 'like', "%" . $number . "%")->where('allowed', true)->first();
+		return ($status !== null);
     }
 
     public function getAuthCode()
