@@ -101,7 +101,9 @@ class TestStasisApp {
 
         $this->stasisEvents->on('ChannelDtmfReceived', function ($event) {
             $this->stasisLogger->notice("+++ ChannelDtmfReceived +++ [" . json_encode($event->digit) . "]\n");
-            $this->clients[$event->channel->id]->onDTMFDigit($event);
+            if(array_key_exists($event->channel->id, $this->clients)) {
+                $this->clients[$event->channel->id]->onDTMFDigit($event);
+            }
         });
 
         $this->stasisEvents->on('StasisEnd', function ($event) {

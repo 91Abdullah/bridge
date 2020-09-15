@@ -114,7 +114,11 @@ class DISA
                 }
                 break;
             case "*":
-                $this->resetDTMF();
+                if($this->currentStep === $this->ivrflow[3]) {
+                    $this->hangupCall($event);
+                } else {
+                    $this->resetDTMF();
+                }
                 break;
             default:
                 $this->dtmfSequence .= $event->digit;
@@ -128,6 +132,7 @@ class DISA
                             $this->resetDTMF();
                             $this->channels->playback($event->channel->id, 'sound:ari/thank_you', 'en', 0, 5000);
                             $this->channels->playback($event->channel->id, "sound:ari/customer_number", 'en', 0, 5000);
+                            $this->channels->playback($event->channel->id, "sound:ari/incall_hangup", 'en', 0, 5000);
                             break;
                         case '2':
                             $this->stasisLogger->notice("Client {$event->channel->id} entered incorrect amount");
@@ -240,5 +245,16 @@ class DISA
         $this->bridged_call_id = $bridge['id'];
         $this->incoming_channel_id = $channel;
         $this->outgoing_channel_id = $outChannel['id'];
+    }
+
+    private function hangupCall($event)
+    {
+        $this->stasisLogger->notice("Client {$this->incoming_channel_id} has requested hangup...");
+        $this->channels->delete($this->outgoing_channel_id);
+        $this->bridges->terminate($this->bridged_call_id);
+        $this->resetDTMF();
+        $this->currentStep = $this->ivrflow[3];
+        $this->channels->playback($event->channel->id, "sound:ari/customer_number", 'en', 0, 5000);
+        $this->channels->playback($event->channel->id, "sound:ari/incall_hangup", 'en', 0, 5000);
     }
 }
