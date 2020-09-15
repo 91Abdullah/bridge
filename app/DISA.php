@@ -226,7 +226,7 @@ class DISA
     {
         $bridge = $this->bridges->create('mixing');
         $this->bridges->addChannel($bridge['id'], $channel);
-        $outChannel = $this->channels->create("SIP/$number@TCL", "app-test", "customer_number|$channel");
+        $outChannel = $this->channels->create("SIP/$number@TCL", "disa-test", "customer_number|$channel");
         $this->bridges->addChannel($bridge['id'], $outChannel['id']);
         $this->channels->dial($outChannel['id'], null, 60);
 
